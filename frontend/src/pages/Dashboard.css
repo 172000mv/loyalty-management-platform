@@ -1,0 +1,9 @@
+.dashboard-container {
+  padding: 24px;
+  background: #f0f2f5;
+}
+
+.dashboard-image {
+  width: 100%;
+  height: auto;
+}

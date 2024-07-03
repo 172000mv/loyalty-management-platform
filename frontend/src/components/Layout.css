@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.logo_inside {
+  height: 32px;
+  margin: 16px;
+  text-align: center;
+  background: #ffffff;
+}
+
+.logo img {
+  height: 100%;
+}
+
+.site-layout-sub-header-background {
+  background: #fff;
+}
+
+.header-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-left: 10px;
+}
+
+.site-layout-background {
+  background: #fff;
+  padding: 24px;
+  min-height: 360px;
+}
+
+.mobilytix-rewards {
+  display: inline;
+}
+
+.mobilytix {
+  color: #e51a1a; /* Red color for MobiLytix */
+  font-weight: 600; /* Bold font */
+  font-size: 24px; /* Adjust the size as needed */
+}
+
+.rewards {
+  color: #000000; /* Black color for Rewards */
+  font-weight: 600; /* Bold font */
+  font-size: 18px; /* Smaller size than MobiLytix */
+  margin-left: 5px; /* Optional: add some space between the words */
+}
