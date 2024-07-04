@@ -1,17 +1,37 @@
-import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import React from 'react';
+import { Form, Input, Button, Checkbox, message } from 'antd';
+import { useNavigate, Link } from 'react-router-dom'; 
+import axios from 'axios';
+import './Login.css';
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
 import logo from "../comviva_logo.png";
 import logoText from "../comviva_logo_text.png";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    navigate("/");
-    console.log("Received values of form: ", values);
+  const onFinish = async (values) => {
+    const { remember, ...loginValues } = values;
+    try {
+      console.log("Submitting login with values:", loginValues);
+
+      const response = await axios.post("http://localhost:5000/api/login", loginValues);
+      console.log("Login response:", response);
+
+      if (response.status === 200) {
+        message.success("Login successful!");
+        // Store the token in localStorage
+        localStorage.setItem('token', response.data.token);
+        // Navigate to the main page
+        navigate("/");
+      } else {
+        console.log("Login failed with status:", response.status);
+        message.error("Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      message.error("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -29,12 +49,12 @@ const Login = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+            name="email"
+            rules={[{ required: true, message: "Please input your Email!" }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username/Email"
+              placeholder="Email"
             />
           </Form.Item>
           <Form.Item

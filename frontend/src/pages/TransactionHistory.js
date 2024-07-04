@@ -2,6 +2,8 @@ import React from "react";
 import { Table } from "antd";
 import "./TransactionHistory.css";
 
+
+
 const columns = [
   {
     title: "Transaction ID",

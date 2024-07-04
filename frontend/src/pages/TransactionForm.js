@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Button, Select, DatePicker } from "antd";
 import "./TransactionForm.css";
 
-const { Option } = Select;
+const { Option } = Select; // Add this line to import Option
 
 const TransactionForm = () => {
   const [form] = Form.useForm();
@@ -28,9 +28,7 @@ const TransactionForm = () => {
         </Form.Item>
         <Form.Item
           name="transaction_type"
-          rules={[
-            { required: true, message: "Please select Transaction Type!" },
-          ]}
+          rules={[{ required: true, message: "Please select Transaction Type!" }]}
         >
           <Select placeholder="Transaction Type">
             <Option value="manage_members">Manage Members</Option>

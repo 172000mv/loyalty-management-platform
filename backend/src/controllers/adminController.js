@@ -5,7 +5,6 @@ const logger = require('../middlewares/logger');
 
 exports.registerAdmin = async (req, res) => {
   logger(req, res, () => {});
-  console.log("Request Body:",req.body)
   const { user, email, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,12 +23,15 @@ exports.registerAdmin = async (req, res) => {
 exports.loginAdmin = async (req, res) => {
   logger(req, res, () => {}); 
 
-  const { email, password } = req.body;
+  const { email, password  } = req.body;
+  console.log("Request Body",req.body);
   const { data: admin, error } = await supabase
     .from('admin_users')
     .select('*')
     .eq('email', email)
     .single();
+
+    console.log('Admin user data:', admin);
 
   if (error) {
     return res.status(400).json({ error: error.message });
@@ -43,5 +45,5 @@ exports.loginAdmin = async (req, res) => {
 
   const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-  res.json({ token });
+  res.status(200).json({ message: 'Success' });
 };

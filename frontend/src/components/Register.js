@@ -1,29 +1,29 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import logo from "../comviva_logo.png";
 import logoText from "../comviva_logo_text.png";
+import axiosInstance from '../utils/axiosInstance';
 
 const Register = () => {
+  const navigate = useNavigate();
   const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
+    const { confirm, ...registerValues } = values;
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
-        values
-      );
+      console.log("Submitting Register with values:", registerValues);
+      const response = await axiosInstance.post('/api/register', registerValues);
       if (response.status === 200) {
-        message.success("Registration successful!");
-        // Redirect or perform other actions after successful registration
+        message.success('Registration successful!');
+        // Redirect to login page after successful registration
+        navigate("/login");
       } else {
-        message.error("Registration failed. Please try again.");
+        message.error('Registration failed. Please try again.');
       }
     } catch (error) {
-      console.error("Error during registration:", error);
-      message.error("Registration failed. Please try again.");
+      console.error('Error during registration:', error);
+      message.error('Registration failed. Please try again.');
     }
   };
 

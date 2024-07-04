@@ -7,17 +7,18 @@ const membersController = require('../controllers/membersController');
 const authenticateToken = require('../middlewares/auth');
 
 // Admin routes
-router.post('/register', authenticateToken, adminController.registerAdmin);
-router.post('/login', authenticateToken, adminController.loginAdmin);
+router.post('/register', adminController.registerAdmin);
+router.post('/login', adminController.loginAdmin);
 
 // Transaction routes
 router.post('/transactions', authenticateToken, transactionController.createTransaction);
 router.get('/transactions', authenticateToken, transactionController.getTransactions);
 
 // Points routes
-router.get('/points', authenticateToken, pointsController.getMemberPoints);
+router.post('/points', authenticateToken, pointsController.updatePoints);
 
 // Members routes
 router.get('/members', authenticateToken, membersController.getMembers);
+router.post('/addmember', authenticateToken, membersController.addMembers);
 
 module.exports = router;
