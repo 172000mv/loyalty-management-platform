@@ -1,53 +1,166 @@
-import React from "react";
-import { Table } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { Table, Input, Button, message } from "antd";
+import axios from "../utils/axiosInstance";
+import { SearchOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
 import "./TransactionHistory.css";
 
-
-
-const columns = [
-  {
-    title: "Transaction ID",
-    dataIndex: "transaction_id",
-    key: "transaction_id",
-  },
-  {
-    title: "User ID",
-    dataIndex: "user_id",
-    key: "user_id",
-  },
-  {
-    title: "Type",
-    dataIndex: "transaction_type",
-    key: "transaction_type",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-  },
-  {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    transaction_id: "12345",
-    user_id: "u001",
-    transaction_type: "Credit",
-    amount: "100",
-    date: "2024-06-24",
-  },
-  // Add more data here
-];
+const { Search } = Input;
 
 const TransactionHistory = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get("/api/transactions", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setTransactions(response.data);
+        } else {
+          message.error("Failed to load transactions.");
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        message.error("Failed to load transactions.");
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    if (!selectedKeys[0]) {
+      handleReset(confirm);
+    } else {
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+    }
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+    setSearchedColumn("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : "",
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const columns = [
+    {
+      title: "Member ID",
+      dataIndex: "member_id",
+      key: "member_id",
+      ...getColumnSearchProps("member_id"),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      ...getColumnSearchProps("name"),
+    },
+    {
+      title: "Points Updated",
+      dataIndex: "points_updated",
+      key: "points_updated",
+      ...getColumnSearchProps("points_updated"),
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      ...getColumnSearchProps("type"),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      ...getColumnSearchProps("status"),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      ...getColumnSearchProps("description"),
+    },
+  ];
+
   return (
     <div className="transaction-history-container">
-      <Table columns={columns} dataSource={data} />
+      <h1>Transaction History</h1>
+      <Search
+        placeholder="Search transactions"
+        onSearch={(value) => handleSearch([value], () => {}, "search")}
+        enterButton
+        style={{ marginBottom: 20 }}
+      />
+      <Table
+        columns={columns}
+        dataSource={transactions}
+        rowKey="id"
+      />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+// CustomLayout.js
 import React from "react";
 import { Layout, Menu, Button, Avatar } from "antd";
 import { useNavigate, Outlet } from "react-router-dom";
@@ -7,16 +8,18 @@ import {
   HistoryOutlined,
   BellOutlined,
   UserOutlined,
+  CreditCardOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import "./Layout.css";
 
 const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu;
 
 const CustomLayout = () => {
   const navigate = useNavigate();
-
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -35,15 +38,24 @@ const CustomLayout = () => {
           >
             Dashboard
           </Menu.Item>
+          <SubMenu key="sub1" icon={<FormOutlined />} title="Transaction Form">
+            <Menu.Item
+              key="2"
+              icon={<CreditCardOutlined />}
+              onClick={() => navigate("/transaction-form/points-operation")}
+            >
+              Points Operation
+            </Menu.Item>
+            <Menu.Item
+              key="3"
+              icon={<TeamOutlined />}
+              onClick={() => navigate("/transaction-form/member-operation")}
+            >
+              Member Operation
+            </Menu.Item>
+          </SubMenu>
           <Menu.Item
-            key="2"
-            icon={<FormOutlined />}
-            onClick={() => navigate("/transaction-form")}
-          >
-            Transaction Form
-          </Menu.Item>
-          <Menu.Item
-            key="3"
+            key="4"
             icon={<HistoryOutlined />}
             onClick={() => navigate("/transaction-history")}
           >
@@ -60,7 +72,7 @@ const CustomLayout = () => {
             <div className="header-right">
               <BellOutlined style={{ fontSize: "20px", marginRight: "20px" }} />
               <Avatar icon={<UserOutlined />} />
-              <span className="username">aaa</span>
+              <span className="username">Vikas</span> {/* Display username */}
               <Button
                 type="primary"
                 onClick={logout}

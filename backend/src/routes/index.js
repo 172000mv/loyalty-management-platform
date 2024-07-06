@@ -11,14 +11,14 @@ router.post('/register', adminController.registerAdmin);
 router.post('/login', adminController.loginAdmin);
 
 // Transaction routes
-router.post('/transactions', authenticateToken, transactionController.createTransaction);
-router.get('/transactions', authenticateToken, transactionController.getTransactions);
+router.post('/transactions',  transactionController.createTransaction);
+router.get('/transactions', transactionController.getTransactions);
 
 // Points routes
-router.post('/points', authenticateToken, pointsController.updatePoints);
+router.post('/points', pointsController.updatePoints);
 
 // Members routes
-router.get('/members', authenticateToken, membersController.getMembers);
-router.post('/addmember', authenticateToken, membersController.addMembers);
+router.get('/members', membersController.getMembers);
+router.post('/addmember', membersController.addMembers);
 
 module.exports = router;

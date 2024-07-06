@@ -18,14 +18,20 @@ exports.addMembers = async (req, res) => {
 
 
 exports.getMembers = async (req, res) => {
-  logger(req, res, () => {}); 
-  const { data, error } = await supabase
-    .from('members')
-    .select('*');
+  logger(req, res, () => {});
 
-  if (error) {
-    return res.status(400).json({ error: error.message });
+  try {
+    const { data, error } = await supabase
+      .from('members')
+      .select('*');
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching members:', error.message);
+    res.status(400).json({ error: error.message });
   }
-
-  res.json(data);
 };

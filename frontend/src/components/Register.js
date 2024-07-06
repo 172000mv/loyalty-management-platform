@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import logo from "../comviva_logo.png";
 import logoText from "../comviva_logo_text.png";
-import axiosInstance from '../utils/axiosInstance';
+import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Register = () => {
     const { confirm, ...registerValues } = values;
     try {
       console.log("Submitting Register with values:", registerValues);
-      const response = await axiosInstance.post('/api/register', registerValues);
+      const response = await axios.post("http://localhost:5000/api/register", registerValues);
       if (response.status === 200) {
         message.success('Registration successful!');
         // Redirect to login page after successful registration
@@ -42,12 +42,12 @@ const Register = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+            name="user"
+            rules={[{ required: true, message: "Please input your user!" }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="UserName"
             />
           </Form.Item>
           <Form.Item

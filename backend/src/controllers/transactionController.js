@@ -17,18 +17,30 @@ exports.createTransaction = async (req, res) => {
 };
 
 exports.getTransactions = async (req, res) => {
-  logger(req, res, () => {}); 
+  try {
+    logger(req, res, async () => {
+      const { member_id, name, points_updated, type, status, description } = req.query;
 
-  const { member_id } = req.query;
+      let query = supabase.from('transactions').select('*');
 
-  const { data, error } = await supabase
-    .from('transactions')
-    .select('*')
-    .eq('member_id', member_id);
+      if (member_id) query = query.eq('member_id', member_id);
+      if (name) query = query.ilike('name', `%${name}%`);
+      if (points_updated) query = query.eq('points_updated', points_updated);
+      if (type) query = query.eq('type', type);
+      if (status) query = query.eq('status', status);
+      if (description) query = query.ilike('description', `%${description}%`);
 
-  if (error) {
-    return res.status(400).json({ error: error.message });
+      const { data, error } = await query;
+
+      if (error) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      res.status(200).json(data);
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  res.json(data);
 };
+
+

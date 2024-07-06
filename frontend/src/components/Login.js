@@ -7,6 +7,8 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../comviva_logo.png";
 import logoText from "../comviva_logo_text.png";
 
+
+
 const Login = () => {
   const navigate = useNavigate();
 
@@ -14,13 +16,15 @@ const Login = () => {
     const { remember, ...loginValues } = values;
     try {
       console.log("Submitting login with values:", loginValues);
+      
 
       const response = await axios.post("http://localhost:5000/api/login", loginValues);
       console.log("Login response:", response);
 
       if (response.status === 200) {
         message.success("Login successful!");
-        // Store the token in localStorage
+
+        // Store the token and username in localStorage
         localStorage.setItem('token', response.data.token);
         // Navigate to the main page
         navigate("/");
