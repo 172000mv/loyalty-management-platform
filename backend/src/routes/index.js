@@ -11,11 +11,13 @@ router.post('/register', adminController.registerAdmin);
 router.post('/login', adminController.loginAdmin);
 
 // Transaction routes
-router.post('/transactions',  transactionController.createTransaction);
 router.get('/transactions', transactionController.getTransactions);
+router.get('/trends', transactionController.getTransactionTrends);
 
 // Points routes
 router.post('/points', pointsController.updatePoints);
+router.get('/totalpoints', pointsController.getTotalPoints);
+
 
 // Members routes
 router.get('/members', membersController.getMembers);

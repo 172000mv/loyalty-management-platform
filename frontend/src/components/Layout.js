@@ -1,4 +1,3 @@
-// CustomLayout.js
 import React from "react";
 import { Layout, Menu, Button, Avatar } from "antd";
 import { useNavigate, Outlet } from "react-router-dom";
@@ -13,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import "./Layout.css";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 const { SubMenu } = Menu;
 
 const CustomLayout = () => {
@@ -25,12 +24,12 @@ const CustomLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider breakpoint="lg" theme="light" collapsedWidth="0">
+      <Header className="header">
         <div className="logo_inside">
           <span className="mobilytix">MobiLytix</span>
           <span className="rewards">Rewards</span>
         </div>
-        <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu theme="light" mode="horizontal" defaultSelectedKeys={["1"]}>
           <Menu.Item
             key="1"
             icon={<DashboardOutlined />}
@@ -61,37 +60,24 @@ const CustomLayout = () => {
           >
             Transaction History
           </Menu.Item>
+          <Menu.Item key="logout" onClick={logout}>
+            <Button type="primary">Logout</Button>
+          </Menu.Item>
         </Menu>
-      </Sider>
-      <Layout>
-        <Header
-          className="site-layout-sub-header-background"
-          style={{ padding: 0 }}
+        <div className="header-right">
+          <BellOutlined style={{ fontSize: "20px", marginRight: "20px" }} />
+          <Avatar icon={<UserOutlined />} />
+          <span className="username">Vikas</span> {/* Display username */}
+        </div>
+      </Header>
+      <Content style={{ margin: "24px 16px 0" }}>
+        <div
+          className="site-layout-background"
+          style={{ padding: 24, minHeight: 360 }}
         >
-          <div className="header-content">
-            <div className="header-right">
-              <BellOutlined style={{ fontSize: "20px", marginRight: "20px" }} />
-              <Avatar icon={<UserOutlined />} />
-              <span className="username">Vikas</span> {/* Display username */}
-              <Button
-                type="primary"
-                onClick={logout}
-                style={{ marginLeft: "20px" }}
-              >
-                Logout
-              </Button>
-            </div>
-          </div>
-        </Header>
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            className="site-layout-background"
-            style={{ padding: 24, minHeight: 360 }}
-          >
-            <Outlet />
-          </div>
-        </Content>
-      </Layout>
+          <Outlet />
+        </div>
+      </Content>
     </Layout>
   );
 };

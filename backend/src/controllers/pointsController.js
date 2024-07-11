@@ -62,3 +62,22 @@ exports.updatePoints = async (req, res) => {
 
   res.json({ member_id: member.id, total_points: updatedPoints });
 };
+
+exports.getTotalPoints = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('members')
+      .select('id, name, points');
+
+    if (error) {
+      throw error;
+    }
+
+    const totalPoints = data.reduce((acc, member) => acc + member.points, 0);
+
+    res.status(200).json({ totalPoints });
+  } catch (error) {
+    console.error('Error fetching total points:', error);
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
+};

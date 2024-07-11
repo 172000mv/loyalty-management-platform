@@ -43,4 +43,34 @@ exports.getTransactions = async (req, res) => {
   }
 };
 
+exports.getTransactionTrends = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('created_at, points_updated')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    // Aggregate data to calculate total points updated
+    const totalPointsUpdated = data.reduce((sum, transaction) => sum + transaction.points_updated, 0);
+    // Calculate the number of transactions in the current month
+    const currentMonth = new Date().getMonth() + 1;
+    const transactionsThisMonth = data.filter(transaction => {
+      const transactionMonth = new Date(transaction.created_at).getMonth() + 1;
+      return transactionMonth === currentMonth;
+    }).length;
+
+    res.status(200).json({
+      totalPointsUpdated,
+      transactionsThisMonth,
+      transactionData: data,
+    });
+  } catch (error) {
+    console.error('Error fetching transaction trends:', error);
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
+};
 
