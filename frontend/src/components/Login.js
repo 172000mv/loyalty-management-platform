@@ -26,6 +26,8 @@ const Login = () => {
 
         // Store the token and username in localStorage
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', loginValues.user); // Store the username
+
         // Navigate to the main page
         navigate("/");
       } else {
@@ -53,12 +55,12 @@ const Login = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="email"
-            rules={[{ required: true, message: "Please input your Email!" }]}
+            name="user"
+            rules={[{ required: true, message: "Please input your User Name!" }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
+              placeholder="USER"
             />
           </Form.Item>
           <Form.Item

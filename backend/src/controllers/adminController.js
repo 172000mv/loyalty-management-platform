@@ -23,12 +23,12 @@ exports.registerAdmin = async (req, res) => {
 exports.loginAdmin = async (req, res) => {
   logger(req, res, () => {}); 
 
-  const { email, password  } = req.body;
+  const { user, password  } = req.body;
   console.log("Request Body",req.body);
   const { data: admin, error } = await supabase
     .from('admin_users')
     .select('*')
-    .eq('email', email)
+    .eq('user', user)
     .single();
 
     console.log('Admin user data:', admin);

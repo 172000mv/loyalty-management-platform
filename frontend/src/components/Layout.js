@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu, Button, Avatar } from "antd";
 import { useNavigate, Outlet } from "react-router-dom";
 import {
@@ -17,8 +17,18 @@ const { SubMenu } = Menu;
 
 const CustomLayout = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username"); // Remove username from local storage
     navigate("/login");
   };
 
@@ -60,14 +70,16 @@ const CustomLayout = () => {
           >
             Transaction History
           </Menu.Item>
-          <Menu.Item key="logout" onClick={logout}>
-            <Button type="primary">Logout</Button>
-          </Menu.Item>
         </Menu>
         <div className="header-right">
           <BellOutlined style={{ fontSize: "20px", marginRight: "20px" }} />
           <Avatar icon={<UserOutlined />} />
-          <span className="username">Vikas</span> {/* Display username */}
+          <div className="user-info">
+            <span className="username">{username}</span> {/* Display username */}
+            <Button type="primary" onClick={logout} className="logout-button">
+              Logout
+            </Button>
+          </div>
         </div>
       </Header>
       <Content style={{ margin: "24px 16px 0" }}>
