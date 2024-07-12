@@ -12,15 +12,11 @@ const TransactionHistory = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
+  const userId = localStorage.getItem('username');
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get("/api/transactions", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(`/api/transactions?userId=${userId}`);
 
         if (response.status === 200) {
           setTransactions(response.data);
@@ -34,7 +30,7 @@ const TransactionHistory = () => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [userId]); 
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();

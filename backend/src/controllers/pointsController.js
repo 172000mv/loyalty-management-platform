@@ -1,20 +1,20 @@
 const logger = require('../middlewares/logger');
 const supabase = require('../utils/supabaseClient');
-
 exports.updatePoints = async (req, res) => {
   logger(req, res, () => {});
 
-  const { name, operationType, points } = req.body;
+  const { userId, name, operationType, points } = req.body;
 
-  if (!name || !operationType || !points) {
+  if (!userId || !name || !operationType || !points) {
     return res.status(400).json({ error: 'Missing required body parameters' });
   }
 
-  // Get the member by name
+  // Get the member by name and userId
   const { data: member, error: memberError } = await supabase
     .from('members')
     .select('*')
     .eq('name', name)
+    .eq('userId', userId)
     .single();
 
   if (memberError || !member) {
@@ -38,7 +38,8 @@ exports.updatePoints = async (req, res) => {
   const { error: updateError } = await supabase
     .from('members')
     .update({ points: updatedPoints })
-    .eq('id', member.id);
+    .eq('id', member.id)
+    .eq('userId', userId);
 
   if (updateError) {
     return res.status(400).json({ error: updateError.message });
@@ -53,7 +54,8 @@ exports.updatePoints = async (req, res) => {
       points_updated: points,
       type: operationType,
       status: 'success',
-      description: `${operationType} points` // updated to 'description'
+      description: `${operationType} points`, // updated to 'description'
+      userId: userId // include userId in the transaction
     }]);
 
   if (transactionError) {
@@ -63,11 +65,16 @@ exports.updatePoints = async (req, res) => {
   res.json({ member_id: member.id, total_points: updatedPoints });
 };
 
+
+
 exports.getTotalPoints = async (req, res) => {
   try {
+    const { userId } = req.query; // Get user ID from query parameters
+
     const { data, error } = await supabase
       .from('members')
-      .select('id, name, points');
+      .select('points')
+      .eq('userId', userId); // Filter by user ID
 
     if (error) {
       throw error;

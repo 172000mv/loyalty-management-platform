@@ -13,18 +13,17 @@ const Dashboard = () => {
   const [transactionTrends, setTransactionTrends] = useState([]);
   const [totalPointsUpdated, setTotalPointsUpdated] = useState(0);
   const [transactionsThisMonth, setTransactionsThisMonth] = useState(0);
-
+  const userId = localStorage.getItem('username'); 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const membersResponse = await axiosInstance.get('/api/members');
-        setTotalMembers(membersResponse.data.length);
+        const membersResponse = await axiosInstance.get(`/api/members?userId=${userId}`);
+       setTotalMembers(membersResponse.data.length);
 
-        const pointsResponse = await axiosInstance.get('/api/totalpoints');
-        console.log("totalpoints",pointsResponse);
+        const pointsResponse = await axiosInstance.get(`/api/totalpoints?userId=${userId}`);
         setTotalPoints(pointsResponse.data.totalPoints);
 
-        const trendsResponse = await axiosInstance.get('/api/trends');
+        const trendsResponse = await axiosInstance.get(`/api/trends?userId=${userId}`);
         console.log("trendsResponse.data.totalPointsUpdated",trendsResponse.data.totalPointsUpdated);
         console.log("trendsResponse.data.transactionsThisMonth",trendsResponse.data.transactionsThisMonth);
         console.log("trendsResponse.data.transactionData",trendsResponse.data.transactionData);
@@ -37,7 +36,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, []);
+  },[userId]); 
 
   return (
     <div className="dashboard-container">

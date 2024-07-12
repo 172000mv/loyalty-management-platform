@@ -3,11 +3,11 @@ const logger = require('../middlewares/logger');
 
 exports.addMembers = async (req, res) => {
   logger(req, res, () => {}); 
-  const { memberId,name, email, points} = req.body;
+  const { memberId,name, email, points , userId} = req.body;
   
   const { data, error } = await supabase
     .from('members')
-    .insert([{ memberId,name, email, points }]);
+    .insert([{ memberId,name, email, points , userId }]);
 
   if (error) {
     return res.status(400).json({ error: error.message });
@@ -21,9 +21,12 @@ exports.getMembers = async (req, res) => {
   logger(req, res, () => {});
 
   try {
+    const { userId } = req.query; // Get user ID from query parameters
+
     const { data, error } = await supabase
       .from('members')
-      .select('*');
+      .select('*')
+      .eq('userId', userId); // Filter by user ID
 
     if (error) {
       throw error;

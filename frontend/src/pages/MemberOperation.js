@@ -5,15 +5,19 @@ import "./MemberOperation.css";
 
 const MemberOperation = () => {
   const [loading, setLoading] = useState(false);
-
+  const userId = localStorage.getItem('username'); 
   const onFinish = async (values) => {
     setLoading(true);
     console.log("Member Update Request:",values);
     try {
+      const requestBody = {
+        ...values,
+        userId, // Include userId in the request body
+      };
         //const token = process.env.REACT_APP_JWT_TOKEN;
       const response = await axios.post(
         "http://localhost:5000/api/addmember",
-        values
+        requestBody
       );
 
       if (response.status === 200) {

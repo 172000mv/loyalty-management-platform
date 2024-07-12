@@ -9,11 +9,11 @@ const { Option } = Select;
 const PointsOperation = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const userId = localStorage.getItem('username'); 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axiosInstance.get("/api/members");
+        const response = await axiosInstance.get(`/api/members?userId=${userId}`);
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching members:", error);
@@ -22,7 +22,7 @@ const PointsOperation = () => {
     };
 
     fetchMembers();
-  }, []);
+  }, [userId]);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -31,7 +31,8 @@ const PointsOperation = () => {
         member_id: values.member_id,
         name: members.find((member) => member.memberId === values.member_id).name,
         operationType: values.operation_type,
-        points: values.points
+        points: values.points,
+        userId: userId
       };
       console.log("Points Update with values:", requestData);
       const response = await axiosInstance.post("/api/points", requestData);

@@ -1,27 +1,16 @@
 const supabase = require('../utils/supabaseClient');
 const logger = require('../middlewares/logger');
 
-exports.createTransaction = async (req, res) => {
-  logger(req, res, () => {}); 
-  const { member_id, points, description } = req.body;
-
-  const { data, error } = await supabase
-    .from('transactions')
-    .insert([{ member_id, points, description }]);
-
-  if (error) {
-    return res.status(400).json({ error: error.message });
-  }
-
-  res.status(201).json({ message: 'Transaction created successfully' });
-};
-
 exports.getTransactions = async (req, res) => {
   try {
     logger(req, res, async () => {
-      const { member_id, name, points_updated, type, status, description } = req.query;
+      const { userId, member_id, name, points_updated, type, status, description } = req.query;
 
-      let query = supabase.from('transactions').select('*');
+      if (!userId) {
+        return res.status(400).json({ error: 'Missing required query parameter: userId' });
+      }
+
+      let query = supabase.from('transactions').select('*').eq('userId', userId);
 
       if (member_id) query = query.eq('member_id', member_id);
       if (name) query = query.ilike('name', `%${name}%`);
@@ -45,9 +34,12 @@ exports.getTransactions = async (req, res) => {
 
 exports.getTransactionTrends = async (req, res) => {
   try {
+    const { userId } = req.query; // Get user ID from query parameters
+
     const { data, error } = await supabase
       .from('transactions')
       .select('created_at, points_updated')
+      .eq('userId', userId) // Filter by user ID
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -73,4 +65,3 @@ exports.getTransactionTrends = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error', error });
   }
 };
-
