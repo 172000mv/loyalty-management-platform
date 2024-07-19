@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, message } from "antd";
-import axiosInstance from "../utils/axiosInstance"; // Import the configured axios instance
+import apiClient from "../utils/apiClient"; // Import the configured axios instance
 import "./PointsOperation.css";
 
 
@@ -13,7 +13,7 @@ const PointsOperation = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axiosInstance.get(`/api/members?userId=${userId}`);
+        const response = await apiClient.get(`/api/members?userId=${userId}`);
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching members:", error);
@@ -35,7 +35,7 @@ const PointsOperation = () => {
         userId: userId
       };
       console.log("Points Update with values:", requestData);
-      const response = await axiosInstance.post("/api/points", requestData);
+      const response = await apiClient.post("/api/points", requestData);
 
       if (response.status === 200) {
         message.success("Points updated successfully!");

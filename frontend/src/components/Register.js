@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import logo from "../comviva_logo.png";
 import logoText from "../comviva_logo_text.png";
-import axios from 'axios';
+import apiClient from '../utils/apiClient';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Register = () => {
     const { confirm, ...registerValues } = values;
     try {
       console.log("Submitting Register with values:", registerValues);
-      const response = await axios.post("http://localhost:5000/api/register", registerValues);
+      const response = await apiClient.post("api/register", registerValues);
       if (response.status === 200) {
         message.success('Registration successful!');
         // Redirect to login page after successful registration

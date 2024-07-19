@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Statistic } from 'antd';
 import { UserOutlined, LineChartOutlined } from '@ant-design/icons';
-import axiosInstance from '../utils/axiosInstance';
+import apiClient from '../utils/apiClient';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
 
@@ -17,13 +17,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const membersResponse = await axiosInstance.get(`/api/members?userId=${userId}`);
+        const membersResponse = await apiClient.get(`/api/members?userId=${userId}`);
        setTotalMembers(membersResponse.data.length);
 
-        const pointsResponse = await axiosInstance.get(`/api/totalpoints?userId=${userId}`);
+        const pointsResponse = await apiClient.get(`/api/totalpoints?userId=${userId}`);
         setTotalPoints(pointsResponse.data.totalPoints);
 
-        const trendsResponse = await axiosInstance.get(`/api/trends?userId=${userId}`);
+        const trendsResponse = await apiClient.get(`/api/trends?userId=${userId}`);
         console.log("trendsResponse.data.totalPointsUpdated",trendsResponse.data.totalPointsUpdated);
         console.log("trendsResponse.data.transactionsThisMonth",trendsResponse.data.transactionsThisMonth);
         console.log("trendsResponse.data.transactionData",trendsResponse.data.transactionData);

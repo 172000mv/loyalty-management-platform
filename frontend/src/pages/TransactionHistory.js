@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Table, Input, Button, message } from "antd";
-import axios from "../utils/axiosInstance";
+import apiClient from "../utils/apiClient";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./TransactionHistory.css";
@@ -16,7 +16,7 @@ const TransactionHistory = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get(`/api/transactions?userId=${userId}`);
+        const response = await apiClient.get(`/api/transactions?userId=${userId}`);
 
         if (response.status === 200) {
           setTransactions(response.data);

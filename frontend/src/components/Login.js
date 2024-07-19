@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { useNavigate, Link } from 'react-router-dom'; 
-import axios from 'axios';
+import apiClient  from '../utils/apiClient';
 import './Login.css';
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../comviva_logo.png";
@@ -18,8 +18,9 @@ const Login = () => {
       console.log("Submitting login with values:", loginValues);
       
 
-      const response = await axios.post("http://localhost:5000/api/login", loginValues);
+      const response = await apiClient.post("/api/login", loginValues);
       console.log("Login response:", response);
+      
 
       if (response.status === 200) {
         message.success("Login successful!");

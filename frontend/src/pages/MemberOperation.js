@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import axios from "axios";
+import apiClient from "../utils/apiClient";
 import "./MemberOperation.css";
 
 const MemberOperation = () => {
@@ -15,8 +15,8 @@ const MemberOperation = () => {
         userId, // Include userId in the request body
       };
         //const token = process.env.REACT_APP_JWT_TOKEN;
-      const response = await axios.post(
-        "http://localhost:5000/api/addmember",
+      const response = await apiClient.post(
+        "api/addmember",
         requestBody
       );
 
